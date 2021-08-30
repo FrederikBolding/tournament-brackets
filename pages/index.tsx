@@ -1,7 +1,6 @@
 import Head from "next/head";
-import { useState } from "react";
 import { Bracket } from "../components/Bracket";
-import { generateBracket } from "../utils/bracket";
+import { useBracket } from "../hooks/useBracket";
 
 const teams = [
   "Astralis",
@@ -12,10 +11,18 @@ const teams = [
   "Fnatic",
   "Team Liquid",
   "Heroic",
+  "G2",
+  "FaZe",
+  "Vitality",
+  "NiP",
+  "Gambit",
+  "mouz",
+  "Complexity",
+  "ENCE",
 ];
 
 export default function Home() {
-  const [rounds, setRounds] = useState(generateBracket(teams));
+  const { rounds, updateTeamName, updateTeamScore } = useBracket(teams);
 
   return (
     <div>
@@ -24,7 +31,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>{process.browser && <Bracket rounds={rounds} />}</main>
+      <main>
+        {process.browser && (
+          <Bracket
+            rounds={rounds}
+            updateTeamName={updateTeamName}
+            updateTeamScore={updateTeamScore}
+          />
+        )}
+      </main>
     </div>
   );
 }

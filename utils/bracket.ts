@@ -1,3 +1,5 @@
+import { Game, Round } from "../types";
+
 const randomizeTeams = (teams: string[]) =>
   teams.sort(() => 0.5 - Math.random());
 
@@ -12,7 +14,7 @@ const generateInitialMatchups = (teams: string[]) => {
   }, []);
 };
 
-const generateRemainingGames = (games, round) => {
+const generateRemainingGames = (games: Game[], round: number) => {
   const result = games.reduce((acc, cur, idx, arr) => {
     if (idx % 2 !== 0) {
       return acc;
@@ -22,7 +24,9 @@ const generateRemainingGames = (games, round) => {
       {
         id: Math.max(...arr.map((a) => a.id)) + idx + 1,
         team1: `${cur.id}_winner`,
-        team2: `${arr[idx + 1].id}_winner`,
+        team2: `${arr[idx + 1]?.id}_winner`,
+        score1: 0,
+        score2: 0
       },
     ];
   }, []);
@@ -35,7 +39,7 @@ const generateRemainingGames = (games, round) => {
   return [{ round, games: result }];
 };
 
-const linkGames = (rounds) => {
+const linkGames = (rounds: Round[]) => {
   return rounds.map((round, idx) => {
     const nextRound = rounds[idx + 1];
     const games = round.games.map((game, idx) => ({
@@ -53,6 +57,8 @@ export const generateBracket = (teams: string[]) => {
     id,
     team1,
     team2,
+    score1: 0,
+    score2: 0
   }));
   const remainingGames = generateRemainingGames(initialGames, 2);
   return linkGames([{ round: 1, games: initialGames }, ...remainingGames]);

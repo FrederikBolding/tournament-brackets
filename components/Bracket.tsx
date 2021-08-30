@@ -3,7 +3,7 @@ import React from "react";
 import { SteppedLineTo } from "react-lineto";
 import { Game } from "./Game";
 
-const BracketRow = ({ games }) => (
+const BracketRow = ({ round, updateTeamName, updateTeamScore }) => (
   <>
     <Box
       display="flex"
@@ -12,7 +12,7 @@ const BracketRow = ({ games }) => (
       padding="50px"
       flex="1 1 0px"
     >
-      {games.map((game) => (
+      {round.games.map((game) => (
         <Box
           display="flex"
           flexDirection="column"
@@ -21,11 +21,16 @@ const BracketRow = ({ games }) => (
           width="100%"
           key={game.id}
         >
-          <Game {...game} />
+          <Game
+            updateTeamName={updateTeamName}
+            updateTeamScore={updateTeamScore}
+            round={round.round}
+            {...game}
+          />
         </Box>
       ))}
     </Box>
-    {games.map((game) => (
+    {round.games.map((game) => (
       <SteppedLineTo
         from={`game${game.id}`}
         to={`game${game.next}`}
@@ -39,10 +44,15 @@ const BracketRow = ({ games }) => (
   </>
 );
 
-export const Bracket = ({ rounds }) => (
+export const Bracket = ({ rounds, updateTeamName, updateTeamScore }) => (
   <Box display="flex" className="wrapper">
     {rounds.map((round) => (
-      <BracketRow games={round.games} />
+      <BracketRow
+        key={round}
+        round={round}
+        updateTeamName={updateTeamName}
+        updateTeamScore={updateTeamScore}
+      />
     ))}
   </Box>
 );

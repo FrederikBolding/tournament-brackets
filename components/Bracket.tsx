@@ -19,6 +19,7 @@ const BracketRow = ({ games }) => (
           flexGrow={1}
           justifyContent="center"
           width="100%"
+          key={game.id}
         >
           <Game {...game} />
         </Box>

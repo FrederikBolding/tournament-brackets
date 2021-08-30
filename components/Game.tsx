@@ -7,6 +7,12 @@ import {
 } from "@chakra-ui/react";
 import { Game as IGame } from "../types";
 
+interface Props {
+  round: number;
+  updateTeamName(id: number, team: number, value: string): void;
+  updateTeamScore(id: number, team: number, value: string): void;
+}
+
 export const Game = ({
   round,
   id,
@@ -17,7 +23,7 @@ export const Game = ({
   winner,
   updateTeamName,
   updateTeamScore,
-}: IGame & { round: number }) => {
+}: IGame & Props) => {
   return (
     <Box
       display="flex"
@@ -56,7 +62,7 @@ export const Game = ({
         <Box>
           <Editable
             defaultValue="0"
-            value={score1}
+            value={score1.toString()}
             onChange={(val) => updateTeamScore(id, 1, val)}
             color={winner === team1 ? "teal.500" : "gray.500"}
             fontWeight="semibold"
@@ -69,7 +75,7 @@ export const Game = ({
         <Box>
           <Editable
             defaultValue="0"
-            value={score2}
+            value={score2.toString()}
             onChange={(val) => updateTeamScore(id, 2, val)}
             color={winner === team2 ? "teal.500" : "gray.500"}
             fontWeight="semibold"

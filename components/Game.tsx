@@ -64,7 +64,7 @@ export const Game = ({
             defaultValue="0"
             value={score1.toString()}
             onChange={(val) => updateTeamScore(id, 1, val)}
-            color={winner === team1 ? "teal.500" : "gray.500"}
+            color={winner !== undefined && winner === team1 ? "teal.500" : "gray.500"}
             fontWeight="semibold"
             letterSpacing="wide"
           >
@@ -77,7 +77,7 @@ export const Game = ({
             defaultValue="0"
             value={score2.toString()}
             onChange={(val) => updateTeamScore(id, 2, val)}
-            color={winner === team2 ? "teal.500" : "gray.500"}
+            color={winner !== undefined && winner === team2 ? "teal.500" : "gray.500"}
             fontWeight="semibold"
             letterSpacing="wide"
           >

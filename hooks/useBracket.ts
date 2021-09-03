@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Game, Round } from "../types";
-import { generateBracket } from "../utils/bracket";
+import { BracketGenerationOptions, generateBracket } from "../utils/bracket";
 
-export const useBracket = (teams: string[]) => {
-  const [rounds, setRounds] = useState(generateBracket(teams));
+export const useBracket = (teams: string[], options?: BracketGenerationOptions) => {
+  const [rounds, setRounds] = useState(generateBracket(teams, options));
 
   const getRoundByGame = (id: number) => {
     const round = rounds.find((r) => r.games.find((g) => g.id === id));

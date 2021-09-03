@@ -25,7 +25,9 @@ export const useBracket = (teams: string[], options?: BracketGenerationOptions) 
         }
         const team1 = prevGames[0].winner ?? cur.team1;
         const team2 = prevGames[1].winner ?? cur.team2;
-        return [...acc, { ...cur, team1, team2 }];
+        const updatedGame = { ...cur, team1, team2 };
+        const winner = calculateWinner(updatedGame)
+        return [...acc, { ...updatedGame, winner }];
       }, []),
     }));
   };
@@ -33,10 +35,11 @@ export const useBracket = (teams: string[], options?: BracketGenerationOptions) 
   const updateGame = (updatedGame: Game) => {
     const id = updatedGame.id;
     const { round, game } = getRoundByGame(id);
-    const winnerChange = game.winner !== updatedGame.winner;
+    const winner = calculateWinner(updatedGame)
+    const winnerChange = game.winner !== winner;
     const updatedGames = [
       ...round.games.filter((g) => g.id !== id),
-      updatedGame,
+      { ...updatedGame, winner },
     ].sort((a, b) => a.id - b.id);
     const updatedRound = { ...round, games: updatedGames };
     const updatedRounds = [
@@ -67,8 +70,7 @@ export const useBracket = (teams: string[], options?: BracketGenerationOptions) 
       team === 1
         ? { score1: parseInt(newScore) }
         : { score2: parseInt(newScore) };
-    const updatedGame = { ...game, ...update };
-    updateGame({ ...updatedGame, winner: calculateWinner(updatedGame) });
+    updateGame({ ...game, ...update });
   };
 
   return { rounds, updateTeamName, updateTeamScore };

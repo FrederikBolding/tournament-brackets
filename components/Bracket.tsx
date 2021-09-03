@@ -12,7 +12,7 @@ const BracketRow = ({ round, updateTeamName, updateTeamScore }) => (
       padding="50px"
       flex="1 1 0px"
     >
-      {round.games.sort((a, b) => a.next - b.next).map((game) => (
+      {round.games.sort((a, b) => a.order - b.order).map((game) => (
         <Box
           display="flex"
           flexDirection="column"

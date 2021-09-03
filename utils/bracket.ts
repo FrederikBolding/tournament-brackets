@@ -57,17 +57,32 @@ const generateRemainingGames = (
 const linkGames = (rounds: Round[]) => {
   return rounds.map((round, idx) => {
     const nextRound = rounds[idx + 1];
-    const games = round.games
-      .map((game) => ({
-        ...game,
-        next:
-          nextRound &&
-          nextRound.games.find((g) =>
-            [g.team1, g.team2].includes(`${game.id}_winner`)
-          )?.id,
-      }));
+    const games = round.games.map((game) => ({
+      ...game,
+      next:
+        nextRound &&
+        nextRound.games.find((g) =>
+          [g.team1, g.team2].includes(`${game.id}_winner`)
+        )?.id,
+    }));
     return { ...round, games };
   });
+};
+
+const orderGames = (rounds: Round[]) => {
+  return rounds.reduce((acc, round, idx, arr) => {
+    const prevRound = acc[idx - 1];
+    const nextRound = arr[idx + 1];
+    const games = round.games.map((game) => ({
+      ...game,
+      order: prevRound
+        ? game.next
+        : nextRound.games
+            .sort((a, b) => a.next - b.next)
+            .findIndex((g) => g.id === game.next),
+    }));
+    return [...acc, { ...round, games }];
+  }, []);
 };
 
 export enum BracketType {
@@ -85,7 +100,7 @@ export const generateBracket = (
   teams: string[],
   options?: BracketGenerationOptions
 ) => {
-  const type = options.type ?? BracketType.Random;
+  const type = options?.type ?? BracketType.Random;
   const shuffledTeams =
     type === BracketType.Random ? randomizeTeams(teams) : teams;
   const initialMatchups =
@@ -104,5 +119,9 @@ export const generateBracket = (
     2,
     type === BracketType.Seeded
   );
-  return linkGames([{ round: 1, games: initialGames }, ...remainingGames]);
+  const linkedGames = linkGames([
+    { round: 1, games: initialGames },
+    ...remainingGames,
+  ]);
+  return orderGames(linkedGames);
 };

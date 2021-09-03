@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Bracket } from "../components/Bracket";
 import { useBracket } from "../hooks/useBracket";
+import { BracketType } from "../utils/bracket";
 
 const teams = [
   "Astralis",
@@ -22,7 +23,9 @@ const teams = [
 ];
 
 export default function Home() {
-  const { rounds, updateTeamName, updateTeamScore } = useBracket(teams);
+  const { rounds, updateTeamName, updateTeamScore } = useBracket(teams, {
+    type: BracketType.Seeded,
+  });
 
   return (
     <div>
